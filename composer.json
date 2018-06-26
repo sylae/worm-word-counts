@@ -1,0 +1,6 @@
+{
+    "require": {
+        "querypath/querypath": "^3.0",
+        "guzzlehttp/guzzle": "^6.3"
+    }
+}
