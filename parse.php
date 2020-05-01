@@ -12,6 +12,11 @@ foreach(glob("data/*.txt") as $file) {
 	}
 	$f = file_get_contents($file);
 	
+	if (is_null($arcs[$index])) {
+		echo "Skipping $index due to TOC duplication.\n";
+		continue;
+	}
+	
 	// data sanitization
 	$yeet = [
 		"Next Chapter",
