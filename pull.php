@@ -16,10 +16,13 @@ html5qp($qp, "a")->each(function($index, $item) use (&$urls) {
 		return;
 	}
 	$urls[] = $url;
+	if ($url == "https://parahumans.wordpress.com/2013/11/02/teneral-e-1/") { // wildbow pls
+		$urls[] = "https://parahumans.wordpress.com/2013/11/05/teneral-e-2/";
+	}
 });
 print_r($urls);
-die();
 foreach($urls as $id=>$url) {
+	$id = str_pad($id, 3, "0", STR_PAD_LEFT);
 	echo "FETCHING $id /// $url".PHP_EOL;
 	$chapter = $client->request('GET', $url)->getBody();
 	

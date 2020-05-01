@@ -307,7 +307,7 @@ $arcs = [
 	303 => "31-teneral",
 	304 => "31-teneral",
 	305 => "31-teneral",
-	306 => "32-glowworm",
+	306 => "31-teneral",
 	307 => "32-glowworm",
 	308 => "32-glowworm",
 	309 => "32-glowworm",
@@ -316,4 +316,5 @@ $arcs = [
 	312 => "32-glowworm",
 	313 => "32-glowworm",
 	314 => "32-glowworm",
+	315 => "32-glowworm",
 ];
