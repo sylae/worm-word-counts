@@ -22,7 +22,10 @@ class WordcountCount
             $isPunct = in_array(IntlChar::ord($char), $punct);
 			$last = $isLetter;
 			if (!$isLetter && !$last && strlen($word) > 0) {
-				$words[] = mb_strtolower($word);
+				$word = trim($word, "-");
+				if (mb_strlen($word) > 0) {
+					$words[] = mb_strtolower($word);
+				}
 				$word = "";
 			} elseif ($isLetter && !$isPunct) {
 				$word .= IntlChar::foldCase($char);
