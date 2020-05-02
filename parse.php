@@ -4,8 +4,16 @@ require 'vendor/autoload.php';
 require 'arcs.php';
 require 'wordcountcount.php';
 
+if ($req = $argv[1] ?? false) {
+	$parseAll = false;
+	$process = [$req];
+} else {
+	$parseAll = true;
+	$process = glob("data/*.txt");
+}
+
 $chapters = [];
-foreach(glob("data/*.txt") as $file) {
+foreach($process as $file) {
 	$index = ltrim(str_replace("data/", "", str_replace(".txt", "", $file)), "0");
 	if (strlen($index) == 0) { // yeah i know
 		$index = "0";
@@ -33,7 +41,7 @@ foreach(glob("data/*.txt") as $file) {
 	echo "{$arcs[$index]} $index complete\n";
 }
 
-$x = "arc,chapter,word,count\n";
+$x = $parseAll ? "arc,chapter,word,count\n" : "";
 foreach ($chapters as $arc => $chaps) {
 	foreach ($chaps as $chap => $words) {
 		foreach ($words as $word => $count) {
@@ -41,4 +49,10 @@ foreach ($chapters as $arc => $chaps) {
 		}
 	}
 }
-file_put_contents("data.out.csv",$x);
+
+if ($parseAll) {
+	file_put_contents("data.out.csv", $x);
+} else {
+	$fraw = str_replace("data/", "", str_replace(".txt", "", $req));
+	file_put_contents("out/$fraw.out.csv", $x);
+}
