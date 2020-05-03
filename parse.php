@@ -4,23 +4,43 @@ require 'vendor/autoload.php';
 require 'arcs.php';
 require 'wordcountcount.php';
 
-if ($req = $argv[1] ?? false) {
+$test = false; // true will stop after ten tests
+
+if (!in_array($argv[1] ?? "worm", ['worm', 'ward'])) {
+	die("what fic is that?");
+}
+$fic = $argv[1] ?? "worm";
+
+switch ($fic) {
+	case "worm":
+		$folder = "data-worm";
+		break;
+	case "ward":
+		$folder = "data-ward";
+		break;
+}
+
+if ($req = $argv[2] ?? false) {
 	$parseAll = false;
 	$process = [$req];
 } else {
 	$parseAll = true;
-	$process = glob("data/*.txt");
+	$process = glob("$folder/*.txt");
+}
+
+if ($test) {
+	$process = array_slice($process, 0, 10);
 }
 
 $chapters = [];
 foreach($process as $file) {
-	$index = ltrim(str_replace("data/", "", str_replace(".txt", "", $file)), "0");
+	$index = ltrim(str_replace("$folder/", "", str_replace(".txt", "", $file)), "0");
 	if (strlen($index) == 0) { // yeah i know
 		$index = "0";
 	}
 	$f = file_get_contents($file);
 	
-	if (is_null($arcs[$index])) {
+	if (is_null($arcs[$fic][$index])) {
 		echo "Skipping $index due to TOC duplication.\n";
 		continue;
 	}
@@ -30,15 +50,16 @@ foreach($process as $file) {
 		"Next Chapter",
 		"Last Chapter",
 		"Share this:Click to share on Twitter (Opens in new window)Click to share on Facebook (Opens in new window)",
+		"Like this:Like Loading...",
 	];
 	$f = str_replace($yeet, "", $f);
 	
-	if (!array_key_exists($arcs[$index], $chapters)) {
-		$chapters[$arcs[$index]] = [];
+	if (!array_key_exists($arcs[$fic][$index], $chapters)) {
+		$chapters[$arcs[$fic][$index]] = [];
 	}
-	$chapters[$arcs[$index]][$index] = WordcountCount::count($f);
+	$chapters[$arcs[$fic][$index]][$index] = WordcountCount::count($f);
 	
-	echo "{$arcs[$index]} $index complete\n";
+	echo "{$arcs[$fic][$index]} $index complete\n";
 }
 
 $x = $parseAll ? "arc,chapter,word,count\n" : "";
@@ -51,8 +72,8 @@ foreach ($chapters as $arc => $chaps) {
 }
 
 if ($parseAll) {
-	file_put_contents("data.out.csv", $x);
+	file_put_contents("$folder.out.csv", $x);
 } else {
-	$fraw = str_replace("data/", "", str_replace(".txt", "", $req));
+	$fraw = str_replace("$folder/", "", str_replace(".txt", "", $req));
 	file_put_contents("out/$fraw.out.csv", $x);
 }
