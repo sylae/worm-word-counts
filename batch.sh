@@ -2,7 +2,7 @@
 
 FIC="$1"
 
-rm data.out.csv
+rm -f data*.out.csv
 rm -rf out
 mkdir out
 
